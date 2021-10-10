@@ -1,0 +1,274 @@
+
+SMART_HOME_MASTER.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000017a  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001ce  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001ce  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000200  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000090  00000000  00000000  0000023c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000008d6  00000000  00000000  000002cc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000745  00000000  00000000  00000ba2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000048f  00000000  00000000  000012e7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000ec  00000000  00000000  00001778  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000404  00000000  00000000  00001864  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000159  00000000  00000000  00001c68  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000060  00000000  00000000  00001dc1  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 57 00 	jmp	0xae	; 0xae <__vector_13>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 bb 00 	jmp	0x176	; 0x176 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+
+int main(void)
+{
+    /* Replace with your application code */
+    
+	SPI_initMasterMode();
+  6c:	0e 94 43 00 	call	0x86	; 0x86 <SPI_initMasterMode>
+	USART_Init(9600);
+  70:	60 e8       	ldi	r22, 0x80	; 128
+  72:	75 e2       	ldi	r23, 0x25	; 37
+  74:	80 e0       	ldi	r24, 0x00	; 0
+  76:	90 e0       	ldi	r25, 0x00	; 0
+  78:	0e 94 61 00 	call	0xc2	; 0xc2 <USART_Init>
+
+	char data = USART_RxByte()  ;
+  7c:	0e 94 95 00 	call	0x12a	; 0x12a <USART_RxByte>
+		
+		SPI_SendByte(data);
+  80:	0e 94 53 00 	call	0xa6	; 0xa6 <SPI_SendByte>
+  84:	ff cf       	rjmp	.-2      	; 0x84 <main+0x18>
+
+00000086 <SPI_initMasterMode>:
+void SPI_initMasterMode(void)
+{
+	
+	///  set pin direction
+	// set SS pin as output
+	set_bit(DDRB,PIN_4);
+  86:	87 b3       	in	r24, 0x17	; 23
+  88:	80 61       	ori	r24, 0x10	; 16
+  8a:	87 bb       	out	0x17, r24	; 23
+	// set MOSI pin as output
+	set_bit(DDRB,PIN_5);
+  8c:	87 b3       	in	r24, 0x17	; 23
+  8e:	80 62       	ori	r24, 0x20	; 32
+  90:	87 bb       	out	0x17, r24	; 23
+	// set MISO pin as input
+	clr_bit(DDRB,PIN_6);
+  92:	87 b3       	in	r24, 0x17	; 23
+  94:	8f 7b       	andi	r24, 0xBF	; 191
+  96:	87 bb       	out	0x17, r24	; 23
+	// set SCK pin as output
+	set_bit(DDRB,PIN_7);
+  98:	87 b3       	in	r24, 0x17	; 23
+  9a:	80 68       	ori	r24, 0x80	; 128
+  9c:	87 bb       	out	0x17, r24	; 23
+
+	//  set interrupt mode , prescale , clock phase , clock polarity and data order
+
+	// enable SPI
+	/// set as master
+	SPCR |= (1<<SPE) | (1<<MSTR);
+  9e:	8d b1       	in	r24, 0x0d	; 13
+  a0:	80 65       	ori	r24, 0x50	; 80
+  a2:	8d b9       	out	0x0d, r24	; 13
+  a4:	08 95       	ret
+
+000000a6 <SPI_SendByte>:
+}
+ */
+
+void SPI_SendByte(char data)
+{
+	SPDR = data;
+  a6:	8f b9       	out	0x0f, r24	; 15
+	while( ! (SPSR & (1 << SPIF) ) );
+  a8:	77 9b       	sbis	0x0e, 7	; 14
+  aa:	fe cf       	rjmp	.-4      	; 0xa8 <SPI_SendByte+0x2>
+	
+}
+  ac:	08 95       	ret
+
+000000ae <__vector_13>:
+void USART_TxByte( uint8_t data)
+{
+	
+	while( get_bit(UCSRA,UDRE) ){}
+	
+		UDR = data;
+  ae:	1f 92       	push	r1
+  b0:	0f 92       	push	r0
+  b2:	0f b6       	in	r0, 0x3f	; 63
+  b4:	0f 92       	push	r0
+  b6:	11 24       	eor	r1, r1
+  b8:	0f 90       	pop	r0
+  ba:	0f be       	out	0x3f, r0	; 63
+  bc:	0f 90       	pop	r0
+  be:	1f 90       	pop	r1
+  c0:	18 95       	reti
+
+000000c2 <USART_Init>:
+  c2:	2f b7       	in	r18, 0x3f	; 63
+  c4:	20 68       	ori	r18, 0x80	; 128
+  c6:	2f bf       	out	0x3f, r18	; 63
+  c8:	dc 01       	movw	r26, r24
+  ca:	cb 01       	movw	r24, r22
+  cc:	88 0f       	add	r24, r24
+  ce:	99 1f       	adc	r25, r25
+  d0:	aa 1f       	adc	r26, r26
+  d2:	bb 1f       	adc	r27, r27
+  d4:	88 0f       	add	r24, r24
+  d6:	99 1f       	adc	r25, r25
+  d8:	aa 1f       	adc	r26, r26
+  da:	bb 1f       	adc	r27, r27
+  dc:	9c 01       	movw	r18, r24
+  de:	ad 01       	movw	r20, r26
+  e0:	22 0f       	add	r18, r18
+  e2:	33 1f       	adc	r19, r19
+  e4:	44 1f       	adc	r20, r20
+  e6:	55 1f       	adc	r21, r21
+  e8:	22 0f       	add	r18, r18
+  ea:	33 1f       	adc	r19, r19
+  ec:	44 1f       	adc	r20, r20
+  ee:	55 1f       	adc	r21, r21
+  f0:	60 e0       	ldi	r22, 0x00	; 0
+  f2:	74 e2       	ldi	r23, 0x24	; 36
+  f4:	84 ef       	ldi	r24, 0xF4	; 244
+  f6:	90 e0       	ldi	r25, 0x00	; 0
+  f8:	0e 94 99 00 	call	0x132	; 0x132 <__udivmodsi4>
+  fc:	21 50       	subi	r18, 0x01	; 1
+  fe:	31 09       	sbc	r19, r1
+ 100:	29 b9       	out	0x09, r18	; 9
+ 102:	30 bd       	out	0x20, r19	; 32
+ 104:	8b b1       	in	r24, 0x0b	; 11
+ 106:	8d 7f       	andi	r24, 0xFD	; 253
+ 108:	8b b9       	out	0x0b, r24	; 11
+ 10a:	8b b1       	in	r24, 0x0b	; 11
+ 10c:	8e 7f       	andi	r24, 0xFE	; 254
+ 10e:	8b b9       	out	0x0b, r24	; 11
+ 110:	1a b8       	out	0x0a, r1	; 10
+ 112:	8a b1       	in	r24, 0x0a	; 10
+ 114:	88 60       	ori	r24, 0x08	; 8
+ 116:	8a b9       	out	0x0a, r24	; 10
+ 118:	8a b1       	in	r24, 0x0a	; 10
+ 11a:	80 61       	ori	r24, 0x10	; 16
+ 11c:	8a b9       	out	0x0a, r24	; 10
+ 11e:	8a b1       	in	r24, 0x0a	; 10
+ 120:	80 68       	ori	r24, 0x80	; 128
+ 122:	8a b9       	out	0x0a, r24	; 10
+ 124:	86 e8       	ldi	r24, 0x86	; 134
+ 126:	80 bd       	out	0x20, r24	; 32
+ 128:	08 95       	ret
+
+0000012a <USART_RxByte>:
+}
+
+uint8_t USART_RxByte(void)
+{
+	uint8_t value = 0;
+	while(  get_bit(UCSRA,RXC) == 0 ) {  }
+ 12a:	5f 9b       	sbis	0x0b, 7	; 11
+ 12c:	fe cf       	rjmp	.-4      	; 0x12a <USART_RxByte>
+		
+	value =UDR;
+ 12e:	8c b1       	in	r24, 0x0c	; 12
+	
+	return value;
+	
+ 130:	08 95       	ret
+
+00000132 <__udivmodsi4>:
+ 132:	a1 e2       	ldi	r26, 0x21	; 33
+ 134:	1a 2e       	mov	r1, r26
+ 136:	aa 1b       	sub	r26, r26
+ 138:	bb 1b       	sub	r27, r27
+ 13a:	fd 01       	movw	r30, r26
+ 13c:	0d c0       	rjmp	.+26     	; 0x158 <__udivmodsi4_ep>
+
+0000013e <__udivmodsi4_loop>:
+ 13e:	aa 1f       	adc	r26, r26
+ 140:	bb 1f       	adc	r27, r27
+ 142:	ee 1f       	adc	r30, r30
+ 144:	ff 1f       	adc	r31, r31
+ 146:	a2 17       	cp	r26, r18
+ 148:	b3 07       	cpc	r27, r19
+ 14a:	e4 07       	cpc	r30, r20
+ 14c:	f5 07       	cpc	r31, r21
+ 14e:	20 f0       	brcs	.+8      	; 0x158 <__udivmodsi4_ep>
+ 150:	a2 1b       	sub	r26, r18
+ 152:	b3 0b       	sbc	r27, r19
+ 154:	e4 0b       	sbc	r30, r20
+ 156:	f5 0b       	sbc	r31, r21
+
+00000158 <__udivmodsi4_ep>:
+ 158:	66 1f       	adc	r22, r22
+ 15a:	77 1f       	adc	r23, r23
+ 15c:	88 1f       	adc	r24, r24
+ 15e:	99 1f       	adc	r25, r25
+ 160:	1a 94       	dec	r1
+ 162:	69 f7       	brne	.-38     	; 0x13e <__udivmodsi4_loop>
+ 164:	60 95       	com	r22
+ 166:	70 95       	com	r23
+ 168:	80 95       	com	r24
+ 16a:	90 95       	com	r25
+ 16c:	9b 01       	movw	r18, r22
+ 16e:	ac 01       	movw	r20, r24
+ 170:	bd 01       	movw	r22, r26
+ 172:	cf 01       	movw	r24, r30
+ 174:	08 95       	ret
+
+00000176 <_exit>:
+ 176:	f8 94       	cli
+
+00000178 <__stop_program>:
+ 178:	ff cf       	rjmp	.-2      	; 0x178 <__stop_program>
